@@ -1,26 +1,18 @@
-import { Head } from "$fresh/runtime.ts";
+import { Handlers, PageProps } from "$fresh/server.ts";
+import Photo, { getRandomPhoto, ThisAndNext, handler as photoHandler } from "./[photo].tsx";
 
-export default function Home() {
-  return (
-    <>
-      <Head>
-        <title>Fresh App</title>
-      </Head>
-      <p>
-        Welcome to `fresh`. Try updating this message in the ./routes/index.tsx
-        file, and refresh.
-      </p>
-      <ul>
-        <li>
-          <a href="/1.jpg">1</a>
-        </li>
-        <li>
-          <a href="/2.jpg">2</a>
-        </li>
-        <li>
-          <a href="/3.jpg">3</a>
-        </li>
-      </ul>
-    </>
-  );
+export const handler: Handlers<ThisAndNext> = {
+  async GET(_req, ctx) {
+    // Since this is the 'index' page, we just need to pick a random
+    // photo...
+    ctx.params.photo = await getRandomPhoto();
+
+    // and inject it in to the photo page's handler.
+    return await photoHandler.GET!(_req,ctx);
+  },
+};
+
+export default function Index(props: PageProps<ThisAndNext>) {
+  // Just steal the HTML from the photo page.
+  return Photo(props);
 }

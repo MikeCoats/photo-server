@@ -6,7 +6,7 @@ export interface ThisAndNext {
   nextPhoto: string;
 }
 
-async function getRandomPhoto(): Promise<string> {
+export async function getRandomPhoto(): Promise<string> {
   const dir = "static/images";
 
   const photos: string[] = [];
